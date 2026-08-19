@@ -3,32 +3,41 @@
 const name = "Bryn";
 ---
 
-<html lang="en" data-theme="dark" data-color="mint">
+<html lang="en" data-theme="dark" data-color="lavender">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{name} — Home</title>
+    
+    <!-- Inline script to force dark mode and lavender by default on first load -->
+    <script is:inline>
+      const initialTheme = localStorage.getItem('theme') || 'dark';
+      const initialColor = localStorage.getItem('color') || 'lavender';
+      document.documentElement.setAttribute('data-theme', initialTheme);
+      document.documentElement.setAttribute('data-color', initialColor);
+    </script>
+
     <style>
       :root {
-        --bg: #0d1117;
-        --surface: #161b22;
-        --surface-container: #21262d;
-        --surface-container-high: #30363d;
+        --bg: #14111f;
+        --surface: #201a30;
+        --surface-container: #2e2447;
+        --surface-container-high: #3e315e;
         --text: #f0f6fc;
         --text-muted: #8b949e;
         --outline: #484f58;
-        --primary: #2dd4bf;
-        --on-primary: #042f2e;
-        --primary-container: #115e59;
-        --on-primary-container: #ccfbf1;
+        --primary: #c084fc;
+        --on-primary: #2e1065;
+        --primary-container: #7e22ce;
+        --on-primary-container: #f3e8ff;
       }
 
       [data-theme="light"] {
-        --bg: #f8fafc;
+        --bg: #fbf5ff;
         --surface: #ffffff;
-        --surface-container: #f1f5f9;
-        --surface-container-high: #e2e8f0;
+        --surface-container: #f3e8ff;
+        --surface-container-high: #e9d5ff;
         --text: #0f172a;
         --text-muted: #64748b;
         --outline: #cbd5e1;
@@ -353,7 +362,7 @@ const name = "Bryn";
         <div class="nav-item-wrapper" data-tooltip="change accent">
           <div class="custom-dropdown" id="color-dropdown">
             <button id="dropdown-btn" class="nav-pill" type="button" aria-expanded="false">
-              <span id="dropdown-label">🎨 Mint</span>
+              <span id="dropdown-label">🎨 Lavender</span>
             </button>
             <div class="dropdown-menu">
               <button class="dropdown-item" data-value="mint" type="button">Mint <span>●</span></button>
@@ -407,17 +416,15 @@ const name = "Bryn";
       const dropdownLabel = document.getElementById('dropdown-label');
       const dropdownItems = document.querySelectorAll('.dropdown-item');
 
-      const savedTheme = localStorage.getItem('theme') || 'dark';
-      const savedColor = localStorage.getItem('color') || 'mint';
+      const currentTheme = html.getAttribute('data-theme') || 'dark';
+      const currentColor = html.getAttribute('data-color') || 'lavender';
 
-      html.setAttribute('data-theme', savedTheme);
-      html.setAttribute('data-color', savedColor);
-      updateThemeState(savedTheme);
-      updateColorLabel(savedColor);
+      updateThemeState(currentTheme);
+      updateColorLabel(currentColor);
 
       themeToggle.addEventListener('click', () => {
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        const activeTheme = html.getAttribute('data-theme');
+        const newTheme = activeTheme === 'dark' ? 'light' : 'dark';
         html.setAttribute('data-theme', newTheme);
         localStorage.setItem('theme', newTheme);
         updateThemeState(newTheme);
