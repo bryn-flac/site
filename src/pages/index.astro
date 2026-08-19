@@ -118,8 +118,8 @@ const name = "Bryn";
 
       .top-nav {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 0.5rem;
+        grid-template-columns: repeat(8, 1fr);
+        gap: 0.4rem;
       }
 
       .nav-item-wrapper {
@@ -132,8 +132,8 @@ const name = "Bryn";
         color: var(--text);
         border: none;
         border-radius: 16px;
-        padding: 0.85rem 0.5rem;
-        font-size: 0.85rem;
+        padding: 0.85rem 0.4rem;
+        font-size: 0.78rem;
         font-weight: 500;
         text-align: center;
         text-decoration: none;
@@ -142,7 +142,7 @@ const name = "Bryn";
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.3rem;
+        gap: 0.25rem;
         cursor: pointer;
         width: 100%;
         box-sizing: border-box;
@@ -303,9 +303,15 @@ const name = "Bryn";
         font-size: 0.9rem;
       }
 
-      @media (max-width: 768px) {
+      @media (max-width: 900px) {
         .top-nav {
           grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      @media (max-width: 600px) {
+        .top-nav {
+          grid-template-columns: repeat(2, 1fr);
         }
         .content-grid {
           grid-template-columns: 1fr;
@@ -319,6 +325,9 @@ const name = "Bryn";
       <nav class="top-nav">
         <div class="nav-item-wrapper" data-tooltip="info about me">
           <a href="/" class="nav-pill active"><span>🏠</span> Home</a>
+        </div>
+        <div class="nav-item-wrapper" data-tooltip="meet the system">
+          <a href="/system" class="nav-pill"><span>🧩</span> System</a>
         </div>
         <div class="nav-item-wrapper" data-tooltip="contact me">
           <a href="/socials" class="nav-pill"><span>🔗</span> Socials</a>

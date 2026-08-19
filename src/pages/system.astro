@@ -1,7 +1,10 @@
 ---
-// site/src/pages/blog.astro
-import { getCollection } from 'astro:content';
-const posts = await getCollection('blog');
+// site/src/pages/system.astro
+import { getCollection, render } from 'astro:content';
+
+const systemEntries = await getCollection('system');
+const systemEntry = systemEntries[0]; // Gets the first file in the collection
+const { Content } = systemEntry ? await render(systemEntry) : { Content: null };
 const name = "Bryn";
 ---
 
@@ -10,7 +13,7 @@ const name = "Bryn";
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{name} — Blog</title>
+    <title>{systemEntry ? systemEntry.data.title : "System Register"} — {name}</title>
     <style>
       :root {
         --bg: #0d1117;
@@ -135,7 +138,7 @@ const name = "Bryn";
         border: none;
         border-radius: 16px;
         padding: 0.85rem 0.4rem;
-        font-size: 0.78rem;
+        font-size: 0.8rem;
         font-weight: 500;
         text-align: center;
         text-decoration: none;
@@ -264,59 +267,29 @@ const name = "Bryn";
         letter-spacing: -0.02em;
       }
 
-      p {
-        color: var(--text-muted);
-        line-height: 1.6;
+      hr {
+        border: none;
+        border-top: 1px solid var(--outline);
+        opacity: 0.4;
         margin: 0;
       }
 
-      .content-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.25rem;
-        margin-top: 0.5rem;
-      }
-
-      .info-card {
-        background-color: var(--surface-container);
-        border-radius: 20px;
-        padding: 1.25rem 1.5rem;
+      .system-content {
+        color: var(--text);
+        line-height: 1.7;
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
-        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, background-color 0.2s ease;
-        text-decoration: none;
+        gap: 1rem;
       }
 
-      .info-card:hover {
-        transform: scale(1.03);
-        background-color: var(--surface-container-high);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-      }
-
-      .info-card h3 {
-        font-size: 1.05rem;
-        font-weight: 600;
+      .system-content h2, .system-content h3 {
         color: var(--text);
-        margin: 0;
+        margin-top: 1.5rem;
       }
 
-      .info-card p {
-        font-size: 0.9rem;
-      }
-
-      @media (max-width: 900px) {
+      @media (max-width: 850px) {
         .top-nav {
           grid-template-columns: repeat(4, 1fr);
-        }
-      }
-
-      @media (max-width: 600px) {
-        .top-nav {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .content-grid {
-          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -328,14 +301,14 @@ const name = "Bryn";
         <div class="nav-item-wrapper" data-tooltip="info about me">
           <a href="/" class="nav-pill"><span>🏠</span> Home</a>
         </div>
-        <div class="nav-item-wrapper" data-tooltip="meet the system">
-          <a href="/system" class="nav-pill"><span>🧩</span> System</a>
+        <div class="nav-item-wrapper" data-tooltip="system register">
+          <a href="/system" class="nav-pill active"><span>🧩</span> System</a>
         </div>
         <div class="nav-item-wrapper" data-tooltip="contact me">
           <a href="/socials" class="nav-pill"><span>🔗</span> Socials</a>
         </div>
         <div class="nav-item-wrapper" data-tooltip="see whats up">
-          <a href="/blog" class="nav-pill active"><span>📝</span> Blog</a>
+          <a href="/blog" class="nav-pill"><span>📝</span> Blog</a>
         </div>
         <div class="nav-item-wrapper" data-tooltip="what ive done">
           <a href="/projects" class="nav-pill"><span>⚡</span> Projects</a>
@@ -367,17 +340,10 @@ const name = "Bryn";
       </nav>
 
       <div class="qs-panel">
-        <h1>Blog Posts</h1>
-        <p>Easily publish, edit, or delete posts by managing markdown files inside your `src/content/blog/` directory.</p>
-        
-        <div class="content-grid">
-          {posts.map(post => (
-            <a href={`/blog/${post.id}`} class="info-card">
-              <h3>{post.data.title}</h3>
-              <p>{post.data.description}</p>
-              <span style="font-size: 0.8rem; color: var(--primary); font-weight: 500; margin-top: 0.25rem;">{post.data.pubDate.toDateString()}</span>
-            </a>
-          ))}
+        <h1>{systemEntry ? systemEntry.data.title : "System Register"}</h1>
+        <hr />
+        <div class="system-content">
+          {Content ? <Content /> : <p>No system entry found. Please check your content directory.</p>}
         </div>
       </div>
     </div>
