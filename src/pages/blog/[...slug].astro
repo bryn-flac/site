@@ -1,0 +1,450 @@
+---
+// site/src/pages/blog/[...slug].astro
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const name = "Bryn";
+---
+
+<html lang="en" data-theme="dark" data-color="mint">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{post.data.title} — {name}</title>
+    <style>
+      :root {
+        --bg: #0d1117;
+        --surface: #161b22;
+        --surface-container: #21262d;
+        --surface-container-high: #30363d;
+        --text: #f0f6fc;
+        --text-muted: #8b949e;
+        --outline: #484f58;
+        --primary: #2dd4bf;
+        --on-primary: #042f2e;
+        --primary-container: #115e59;
+        --on-primary-container: #ccfbf1;
+      }
+
+      [data-theme="light"] {
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --surface-container: #f1f5f9;
+        --surface-container-high: #e2e8f0;
+        --text: #0f172a;
+        --text-muted: #64748b;
+        --outline: #cbd5e1;
+      }
+
+      /* --- MINT THEME --- */
+      [data-color="mint"][data-theme="dark"] {
+        --bg: #0b1313;
+        --surface: #132222;
+        --surface-container: #1b3333;
+        --surface-container-high: #244646;
+        --primary: #2dd4bf;
+        --on-primary: #00201e;
+        --primary-container: #0f766e;
+        --on-primary-container: #99f6e4;
+      }
+      [data-color="mint"][data-theme="light"] {
+        --bg: #f0fdf4;
+        --surface: #ffffff;
+        --surface-container: #dcfce7;
+        --surface-container-high: #bbf7d0;
+        --primary: #0d9488;
+        --on-primary: #ffffff;
+        --primary-container: #ccfbf1;
+        --on-primary-container: #00201e;
+      }
+
+      /* --- LAVENDER THEME --- */
+      [data-color="lavender"][data-theme="dark"] {
+        --bg: #14111f;
+        --surface: #201a30;
+        --surface-container: #2e2447;
+        --surface-container-high: #3e315e;
+        --primary: #c084fc;
+        --on-primary: #2e1065;
+        --primary-container: #7e22ce;
+        --on-primary-container: #f3e8ff;
+      }
+      [data-color="lavender"][data-theme="light"] {
+        --bg: #fbf5ff;
+        --surface: #ffffff;
+        --surface-container: #f3e8ff;
+        --surface-container-high: #e9d5ff;
+        --primary: #9333ea;
+        --on-primary: #ffffff;
+        --primary-container: #f3e8ff;
+        --on-primary-container: #3b0764;
+      }
+
+      /* --- SUNNY THEME --- */
+      [data-color="sunny"][data-theme="dark"] {
+        --bg: #17150b;
+        --surface: #262210;
+        --surface-container: #3d3516;
+        --surface-container-high: #52481e;
+        --primary: #facc15;
+        --on-primary: #422006;
+        --primary-container: #a16207;
+        --on-primary-container: #fef08a;
+      }
+      [data-color="sunny"][data-theme="light"] {
+        --bg: #fffdf5;
+        --surface: #ffffff;
+        --surface-container: #fef9c3;
+        --surface-container-high: #fef08a;
+        --primary: #ca8a04;
+        --on-primary: #ffffff;
+        --primary-container: #fef9c3;
+        --on-primary-container: #422006;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 3rem 2rem 5rem;
+        background-color: var(--bg);
+        color: var(--text);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .main-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .top-nav {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.5rem;
+      }
+
+      .nav-item-wrapper {
+        position: relative;
+        width: 100%;
+      }
+
+      .nav-pill {
+        background-color: var(--surface);
+        color: var(--text);
+        border: none;
+        border-radius: 16px;
+        padding: 0.85rem 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-align: center;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        cursor: pointer;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .nav-pill:hover {
+        background-color: var(--surface-container-high);
+        transform: scale(1.05) translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+      }
+
+      .nav-pill.active {
+        background-color: var(--primary);
+        color: var(--on-primary);
+        font-weight: 600;
+      }
+
+      /* Hover Tooltip / Preview */
+      .nav-item-wrapper::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: calc(100% + 10px);
+        left: 50%;
+        transform: translateX(-50%) translateY(4px);
+        background-color: var(--surface-container-high);
+        color: var(--text);
+        padding: 0.35rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        white-space: nowrap;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+        z-index: 20;
+      }
+
+      .nav-item-wrapper:hover::after {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .custom-dropdown {
+        position: relative;
+        width: 100%;
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        width: 140px;
+        background-color: var(--surface-container-high);
+        border-radius: 16px;
+        padding: 0.4rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 20;
+      }
+
+      .custom-dropdown.open .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .dropdown-item {
+        background: transparent;
+        border: none;
+        color: var(--text);
+        padding: 0.5rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: background-color 0.15s ease, transform 0.15s ease;
+      }
+
+      .dropdown-item:hover {
+        background-color: var(--surface-container);
+        transform: scale(1.02);
+      }
+
+      .dropdown-item.selected {
+        background-color: var(--primary);
+        color: var(--on-primary);
+        font-weight: 600;
+      }
+
+      .qs-panel {
+        background-color: var(--surface);
+        border-radius: 32px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .back-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        width: fit-content;
+        transition: transform 0.15s ease;
+      }
+
+      .back-link:hover {
+        transform: translateX(-3px);
+      }
+
+      h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0;
+        letter-spacing: -0.02em;
+      }
+
+      .post-date {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        margin: -0.5rem 0 0 0;
+      }
+
+      hr {
+        border: none;
+        border-top: 1px solid var(--outline);
+        opacity: 0.4;
+        margin: 0;
+      }
+
+      .blog-content {
+        color: var(--text);
+        line-height: 1.7;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .blog-content h2, .blog-content h3 {
+        color: var(--text);
+        margin-top: 1.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .top-nav {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-wrapper">
+      <!-- Top Navigation Bar -->
+      <nav class="top-nav">
+        <div class="nav-item-wrapper" data-tooltip="info about me">
+          <a href="/" class="nav-pill"><span>🏠</span> Home</a>
+        </div>
+        <div class="nav-item-wrapper" data-tooltip="contact me">
+          <a href="/socials" class="nav-pill"><span>🔗</span> Socials</a>
+        </div>
+        <div class="nav-item-wrapper" data-tooltip="see whats up">
+          <a href="/blog" class="nav-pill active"><span>📝</span> Blog</a>
+        </div>
+        <div class="nav-item-wrapper" data-tooltip="what ive done">
+          <a href="/projects" class="nav-pill"><span>⚡</span> Projects</a>
+        </div>
+        <div class="nav-item-wrapper" data-tooltip="take a look">
+          <a href="/surprise" class="nav-pill"><span>🎁</span> Surprise</a>
+        </div>
+        
+        <!-- Theme Toggle Button -->
+        <div class="nav-item-wrapper" data-tooltip="switch light/dark">
+          <button id="theme-toggle" class="nav-pill" type="button" aria-label="Toggle Theme">
+            <span id="theme-icon">🌙</span> Theme
+          </button>
+        </div>
+
+        <!-- Color Palette Dropdown -->
+        <div class="nav-item-wrapper" data-tooltip="change accent">
+          <div class="custom-dropdown" id="color-dropdown">
+            <button id="dropdown-btn" class="nav-pill" type="button" aria-expanded="false">
+              <span id="dropdown-label">🎨 Mint</span>
+            </button>
+            <div class="dropdown-menu">
+              <button class="dropdown-item" data-value="mint" type="button">Mint <span>●</span></button>
+              <button class="dropdown-item" data-value="lavender" type="button">Lavender <span>●</span></button>
+              <button class="dropdown-item" data-value="sunny" type="button">Sunny <span>●</span></button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="qs-panel">
+        <a href="/blog" class="back-link">← Back to Blog</a>
+        <h1>{post.data.title}</h1>
+        <p class="post-date">Published on {post.data.pubDate.toDateString()}</p>
+        <hr />
+        <div class="blog-content">
+          <Content />
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const html = document.documentElement;
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      
+      const dropdown = document.getElementById('color-dropdown');
+      const dropdownBtn = document.getElementById('dropdown-btn');
+      const dropdownLabel = document.getElementById('dropdown-label');
+      const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      const savedColor = localStorage.getItem('color') || 'mint';
+
+      html.setAttribute('data-theme', savedTheme);
+      html.setAttribute('data-color', savedColor);
+      updateThemeState(savedTheme);
+      updateColorLabel(savedColor);
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeState(newTheme);
+      });
+
+      dropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+        dropdownBtn.setAttribute('aria-expanded', dropdown.classList.contains('open'));
+      });
+
+      document.addEventListener('click', () => {
+        dropdown.classList.remove('open');
+        dropdownBtn.setAttribute('aria-expanded', 'false');
+      });
+
+      dropdownItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const selectedColor = item.getAttribute('data-value');
+          html.setAttribute('data-color', selectedColor);
+          localStorage.setItem('color', selectedColor);
+          updateColorLabel(selectedColor);
+          dropdown.classList.remove('open');
+          dropdownBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      function updateThemeState(theme) {
+        if (theme === 'dark') {
+          themeIcon.textContent = '🌙';
+        } else {
+          themeIcon.textContent = '☀️';
+        }
+      }
+
+      function updateColorLabel(color) {
+        const capitalized = color.charAt(0).toUpperCase() + color.slice(1);
+        dropdownLabel.textContent = `🎨 ${capitalized}`;
+        
+        dropdownItems.forEach(item => {
+          if (item.getAttribute('data-value') === color) {
+            item.classList.add('selected');
+          } else {
+            item.classList.remove('selected');
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

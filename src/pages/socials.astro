@@ -1,0 +1,534 @@
+---
+// src/pages/socials.astro
+const name = "Bryn";
+const socials = [
+  { platform: "X", handle: "@bryn_flac", url: "https://x.com/bryn_flac", iconType: "x" },
+  { platform: "GitHub", handle: "bryn-flac", url: "https://github.com/bryn-flac", iconType: "github" },
+  { platform: "Discord", handle: "bryn.flac", url: "#", copy: "bryn.flac", iconType: "discord" },
+  { platform: "TikTok", handle: "@bryn.flac", url: "https://www.tiktok.com/@bryn.flac", iconType: "tiktok" },
+  { platform: "YouTube", handle: "@bryn_flac", url: "https://www.youtube.com/@bryn_flac", iconType: "youtube" }
+];
+---
+
+<html lang="en" data-theme="dark" data-color="mint">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{name} — Socials</title>
+    <style>
+      :root {
+        --bg: #0d1117;
+        --surface: #161b22;
+        --surface-container: #21262d;
+        --surface-container-high: #30363d;
+        --text: #f0f6fc;
+        --text-muted: #8b949e;
+        --outline: #484f58;
+        --primary: #2dd4bf;
+        --on-primary: #042f2e;
+        --primary-container: #115e59;
+        --on-primary-container: #ccfbf1;
+      }
+
+      [data-theme="light"] {
+        --bg: #f8fafc;
+        --surface: #ffffff;
+        --surface-container: #f1f5f9;
+        --surface-container-high: #e2e8f0;
+        --text: #0f172a;
+        --text-muted: #64748b;
+        --outline: #cbd5e1;
+      }
+
+      /* --- MINT THEME --- */
+      [data-color="mint"][data-theme="dark"] {
+        --bg: #0b1313;
+        --surface: #132222;
+        --surface-container: #1b3333;
+        --surface-container-high: #244646;
+        --primary: #2dd4bf;
+        --on-primary: #00201e;
+        --primary-container: #0f766e;
+        --on-primary-container: #99f6e4;
+      }
+      [data-color="mint"][data-theme="light"] {
+        --bg: #f0fdf4;
+        --surface: #ffffff;
+        --surface-container: #dcfce7;
+        --surface-container-high: #bbf7d0;
+        --primary: #0d9488;
+        --on-primary: #ffffff;
+        --primary-container: #ccfbf1;
+        --on-primary-container: #00201e;
+      }
+
+      /* --- LAVENDER THEME --- */
+      [data-color="lavender"][data-theme="dark"] {
+        --bg: #14111f;
+        --surface: #201a30;
+        --surface-container: #2e2447;
+        --surface-container-high: #3e315e;
+        --primary: #c084fc;
+        --on-primary: #2e1065;
+        --primary-container: #7e22ce;
+        --on-primary-container: #f3e8ff;
+      }
+      [data-color="lavender"][data-theme="light"] {
+        --bg: #fbf5ff;
+        --surface: #ffffff;
+        --surface-container: #f3e8ff;
+        --surface-container-high: #e9d5ff;
+        --primary: #9333ea;
+        --on-primary: #ffffff;
+        --primary-container: #f3e8ff;
+        --on-primary-container: #3b0764;
+      }
+
+      /* --- SUNNY THEME --- */
+      [data-color="sunny"][data-theme="dark"] {
+        --bg: #17150b;
+        --surface: #262210;
+        --surface-container: #3d3516;
+        --surface-container-high: #52481e;
+        --primary: #facc15;
+        --on-primary: #422006;
+        --primary-container: #a16207;
+        --on-primary-container: #fef08a;
+      }
+      [data-color="sunny"][data-theme="light"] {
+        --bg: #fffdf5;
+        --surface: #ffffff;
+        --surface-container: #fef9c3;
+        --surface-container-high: #fef08a;
+        --primary: #ca8a04;
+        --on-primary: #ffffff;
+        --primary-container: #fef9c3;
+        --on-primary-container: #422006;
+      }
+
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 3rem 2rem 5rem;
+        background-color: var(--bg);
+        color: var(--text);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .main-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+
+      .top-nav {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.5rem;
+      }
+
+      .nav-item-wrapper {
+        position: relative;
+        width: 100%;
+      }
+
+      .nav-pill {
+        background-color: var(--surface);
+        color: var(--text);
+        border: none;
+        border-radius: 16px;
+        padding: 0.85rem 0.5rem;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-align: center;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.15s ease, background-color 0.2s ease, color 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.3rem;
+        cursor: pointer;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .nav-pill:hover {
+        background-color: var(--surface-container-high);
+        transform: translateY(-2px);
+      }
+
+      .nav-pill.active {
+        background-color: var(--primary);
+        color: var(--on-primary);
+        font-weight: 600;
+      }
+
+      /* Hover Tooltip / Preview */
+      .nav-item-wrapper::after {
+        content: attr(data-tooltip);
+        position: absolute;
+        bottom: calc(100% + 10px);
+        left: 50%;
+        transform: translateX(-50%) translateY(4px);
+        background-color: var(--surface-container-high);
+        color: var(--text);
+        padding: 0.35rem 0.75rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        white-space: nowrap;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        pointer-events: none;
+        z-index: 20;
+      }
+
+      .nav-item-wrapper:hover::after {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .custom-dropdown {
+        position: relative;
+        width: 100%;
+      }
+
+      .dropdown-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        width: 140px;
+        background-color: var(--surface-container-high);
+        border-radius: 16px;
+        padding: 0.4rem;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 20;
+      }
+
+      .custom-dropdown.open .dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .dropdown-item {
+        background: transparent;
+        border: none;
+        color: var(--text);
+        padding: 0.5rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-align: left;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: background-color 0.15s ease;
+      }
+
+      .dropdown-item:hover {
+        background-color: var(--surface-container);
+      }
+
+      .dropdown-item.selected {
+        background-color: var(--primary);
+        color: var(--on-primary);
+        font-weight: 600;
+      }
+
+      .qs-panel {
+        background-color: var(--surface);
+        border-radius: 32px;
+        padding: 2.5rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .header-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      h1 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin: 0;
+        letter-spacing: -0.02em;
+      }
+
+      .social-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+      }
+
+      @media (max-width: 768px) {
+        .social-list {
+          grid-template-columns: 1fr;
+        }
+        .top-nav {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .social-card {
+        background-color: var(--surface-container);
+        color: var(--text);
+        border: none;
+        border-radius: 20px;
+        padding: 1.25rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        text-decoration: none;
+        transition: transform 0.15s ease, background-color 0.2s ease;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      .social-card:hover {
+        background-color: var(--surface-container-high);
+        transform: translateY(-2px);
+      }
+
+      .social-info {
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+      }
+
+      .platform-icon {
+        width: 26px;
+        height: 26px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-muted);
+      }
+
+      .platform-icon svg {
+        width: 100%;
+        height: 100%;
+        fill: currentColor;
+      }
+
+      .platform-name {
+        font-weight: 600;
+        font-size: 1.05rem;
+        margin: 0;
+      }
+
+      .platform-handle {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        margin: 0;
+      }
+
+      .action-indicator {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-wrapper">
+      <!-- Top Navigation Bar with Even Spacing & Hover Previews -->
+      <nav class="top-nav">
+        <div class="nav-item-wrapper" data-tooltip="info about me">
+          <a href="/" class="nav-pill"><span>🏠</span> Home</a>
+        </div>
+        <div class="nav-item-wrapper" data-tooltip="contact me">
+          <a href="/socials" class="nav-pill active"><span>🔗</span> Socials</a>
+        </div>
+        <div class="nav-item-wrapper" data-tooltip="see whats up">
+          <a href="/blog" class="nav-pill"><span>📝</span> Blog</a>
+        </div>
+        <div class="nav-item-wrapper" data-tooltip="what ive done">
+          <a href="/projects" class="nav-pill"><span>⚡</span> Projects</a>
+        </div>
+        <div class="nav-item-wrapper" data-tooltip="take a look">
+          <a href="/surprise" class="nav-pill"><span>🎁</span> Surprise</a>
+        </div>
+        
+        <!-- Theme Toggle Button -->
+        <div class="nav-item-wrapper" data-tooltip="switch light/dark">
+          <button id="theme-toggle" class="nav-pill" type="button" aria-label="Toggle Theme">
+            <span id="theme-icon">🌙</span> Theme
+          </button>
+        </div>
+
+        <!-- Color Palette Dropdown -->
+        <div class="nav-item-wrapper" data-tooltip="change accent">
+          <div class="custom-dropdown" id="color-dropdown">
+            <button id="dropdown-btn" class="nav-pill" type="button" aria-expanded="false">
+              <span id="dropdown-label">🎨 Mint</span>
+            </button>
+            <div class="dropdown-menu">
+              <button class="dropdown-item" data-value="mint" type="button">Mint <span>●</span></button>
+              <button class="dropdown-item" data-value="lavender" type="button">Lavender <span>●</span></button>
+              <button class="dropdown-item" data-value="sunny" type="button">Sunny <span>●</span></button>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <div class="qs-panel">
+        <div class="header-row">
+          <h1>Connect With Me</h1>
+        </div>
+
+        <ul class="social-list">
+          {socials.map((s) => (
+            <li>
+              <a 
+                href={s.url} 
+                target={s.copy ? "_self" : "_blank"} 
+                rel="noopener noreferrer" 
+                class="social-card"
+                data-copy={s.copy || ""}
+              >
+                <div class="social-info">
+                  <span class="platform-icon">
+                    {s.iconType === 'x' && (
+                      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    )}
+                    {s.iconType === 'github' && (
+                      <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    )}
+                    {s.iconType === 'discord' && (
+                      <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                    )}
+                    {s.iconType === 'tiktok' && (
+                      <svg viewBox="0 0 24 24"><path d="M19.589 6.686a4.793 4.793 0 01-3.77-4.242V2h-3.445v13.672a2.896 2.896 0 01-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 013.183-4.51v-3.5a6.329 6.329 0 00-5.394 10.692 6.33 6.33 0 0010.857-4.424V8.981a8.17 8.17 0 004.774 1.53V7.072a4.83 4.83 0 01-1.018-.386z"/></svg>
+                    )}
+                    {s.iconType === 'youtube' && (
+                      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                    )}
+                  </span>
+                  <div>
+                    <p class="platform-name">{s.platform}</p>
+                    <p class="platform-handle">{s.handle}</p>
+                  </div>
+                </div>
+                <span class="action-indicator">{s.copy ? "📋 Copy" : "↗"}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      const html = document.documentElement;
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      
+      const dropdown = document.getElementById('color-dropdown');
+      const dropdownBtn = document.getElementById('dropdown-btn');
+      const dropdownLabel = document.getElementById('dropdown-label');
+      const dropdownItems = document.querySelectorAll('.dropdown-item');
+
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      const savedColor = localStorage.getItem('color') || 'mint';
+
+      html.setAttribute('data-theme', savedTheme);
+      html.setAttribute('data-color', savedColor);
+      updateThemeState(savedTheme);
+      updateColorLabel(savedColor);
+
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateThemeState(newTheme);
+      });
+
+      dropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+        dropdownBtn.setAttribute('aria-expanded', dropdown.classList.contains('open'));
+      });
+
+      document.addEventListener('click', () => {
+        dropdown.classList.remove('open');
+        dropdownBtn.setAttribute('aria-expanded', 'false');
+      });
+
+      dropdownItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const selectedColor = item.getAttribute('data-value');
+          html.setAttribute('data-color', selectedColor);
+          localStorage.setItem('color', selectedColor);
+          updateColorLabel(selectedColor);
+          dropdown.classList.remove('open');
+          dropdownBtn.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      function updateThemeState(theme) {
+        if (theme === 'dark') {
+          themeIcon.textContent = '🌙';
+        } else {
+          themeIcon.textContent = '☀️';
+        }
+      }
+
+      function updateColorLabel(color) {
+        const capitalized = color.charAt(0).toUpperCase() + color.slice(1);
+        dropdownLabel.textContent = `🎨 ${capitalized}`;
+        
+        dropdownItems.forEach(item => {
+          if (item.getAttribute('data-value') === color) {
+            item.classList.add('selected');
+          } else {
+            item.classList.remove('selected');
+          }
+        });
+      }
+
+      // Discord copy functionality
+      const socialCards = document.querySelectorAll('.social-card');
+      socialCards.forEach(card => {
+        const copyText = card.getAttribute('data-copy');
+        if (copyText) {
+          card.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigator.clipboard.writeText(copyText);
+            const indicator = card.querySelector('.action-indicator');
+            if (indicator) {
+              indicator.textContent = '✅ Copied!';
+              setTimeout(() => {
+                indicator.textContent = '📋 Copy';
+              }, 2000);
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
