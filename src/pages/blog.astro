@@ -119,26 +119,21 @@ const posts = await getCollection('blog');
         background-color: var(--bg);
         color: var(--text);
         transition: background-color 0.3s ease, color 0.3s ease;
-        box-sizing: border-box;
-      }
-
-      *, *:before, *:after {
-        box-sizing: inherit;
+        overflow-x: hidden;
       }
 
       .main-wrapper {
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
-        width: 100%;
       }
 
+      /* --- HEADER & NAVIGATION --- */
       .header-bar {
         display: flex;
         align-items: center;
         justify-content: space-between;
         gap: 1rem;
-        position: relative;
       }
 
       .top-nav {
@@ -169,8 +164,9 @@ const posts = await getCollection('blog');
         align-items: center;
         justify-content: center;
         gap: 0.25rem;
-        cursor: pointer;
         width: 100%;
+        box-sizing: border-box;
+        cursor: pointer;
       }
 
       .nav-pill:hover {
@@ -185,35 +181,7 @@ const posts = await getCollection('blog');
         font-weight: 600;
       }
 
-      /* Hover Tooltip / Preview */
-      .nav-item-wrapper::after {
-        content: attr(data-tooltip);
-        position: absolute;
-        bottom: calc(100% + 10px);
-        left: 50%;
-        transform: translateX(-50%) translateY(4px);
-        background-color: var(--surface-container-high);
-        color: var(--text);
-        padding: 0.35rem 0.75rem;
-        border-radius: 8px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        white-space: nowrap;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        pointer-events: none;
-        z-index: 20;
-      }
-
-      .nav-item-wrapper:hover::after {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(0);
-      }
-
-      /* Hamburger Button */
+      /* Hamburger Toggle Button (Hidden on Desktop) */
       .hamburger-btn {
         display: none;
         background-color: var(--surface);
@@ -223,7 +191,40 @@ const posts = await getCollection('blog');
         padding: 0.85rem 1.25rem;
         font-size: 1rem;
         font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         cursor: pointer;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* Hover Tooltips - Restricted to devices with true hover support */
+      @media (hover: hover) {
+        .nav-item-wrapper::after {
+          content: attr(data-tooltip);
+          position: absolute;
+          bottom: calc(100% + 10px);
+          left: 50%;
+          transform: translateX(-50%) translateY(4px);
+          background-color: var(--surface-container-high);
+          color: var(--text);
+          padding: 0.35rem 0.75rem;
+          border-radius: 8px;
+          font-size: 0.75rem;
+          font-weight: 500;
+          white-space: nowrap;
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          pointer-events: none;
+          z-index: 20;
+        }
+
+        .nav-item-wrapper:hover::after {
+          opacity: 1;
+          visibility: visible;
+          transform: translateX(-50%) translateY(0);
+        }
       }
 
       .custom-dropdown {
@@ -234,8 +235,7 @@ const posts = await getCollection('blog');
       .dropdown-menu {
         position: absolute;
         top: calc(100% + 8px);
-        right: 0;
-        left: auto;
+        left: 0;
         width: 140px;
         background-color: var(--surface-container-high);
         border-radius: 16px;
@@ -284,6 +284,7 @@ const posts = await getCollection('blog');
         font-weight: 600;
       }
 
+      /* --- CONTENT PANELS --- */
       .qs-panel {
         background-color: var(--surface);
         border-radius: 32px;
@@ -301,42 +302,17 @@ const posts = await getCollection('blog');
         letter-spacing: -0.02em;
       }
 
+      hr {
+        border: none;
+        border-top: 1px solid var(--outline);
+        opacity: 0.4;
+        margin: 0;
+      }
+
       .content-grid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 1.25rem;
-      }
-
-      /* Responsive logic */
-      @media (max-width: 900px) {
-        .hamburger-btn { display: flex; }
-        .top-nav {
-          display: none;
-          grid-template-columns: 1fr;
-          background-color: var(--surface);
-          padding: 1rem;
-          border-radius: 20px;
-          position: absolute;
-          top: calc(100% + 8px);
-          left: 0;
-          right: 0;
-          z-index: 100;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-          box-sizing: border-box;
-        }
-        .top-nav.mobile-open { display: grid; }
-        .header-bar { flex-direction: column; align-items: stretch; position: relative; }
-        .nav-item-wrapper::after { display: none; }
-        .dropdown-menu { left: 0; right: auto; width: 100%; }
-      }
-
-      @media (max-width: 768px) {
-        .content-grid {
-          grid-template-columns: 1fr;
-        }
-        .qs-panel {
-          padding: 1.5rem;
-        }
       }
 
       .info-card {
@@ -371,18 +347,62 @@ const posts = await getCollection('blog');
         margin: 0;
         line-height: 1.4;
       }
+
+      /* --- RESPONSIVE MEDIA QUERIES --- */
+      @media (max-width: 900px) {
+        .hamburger-btn {
+          display: flex;
+        }
+
+        .top-nav {
+          display: none;
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+          background-color: var(--surface);
+          padding: 1rem;
+          border-radius: 20px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+          box-sizing: border-box;
+        }
+
+        .top-nav.mobile-open {
+          display: grid;
+        }
+
+        .header-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .custom-dropdown .dropdown-menu {
+          left: auto;
+          right: 0;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .content-grid {
+          grid-template-columns: 1fr;
+        }
+        .qs-panel {
+          padding: 1.5rem;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="main-wrapper">
-      <!-- Top Navigation & Hamburger Header -->
+      <!-- Navigation Header with Hamburger Menu for Mobile -->
       <header class="header-bar">
-        <button id="hamburger-toggle" class="hamburger-btn" type="button" aria-label="Toggle Menu">☰ Menu</button>
+        <button id="hamburger-toggle" class="hamburger-btn" type="button" aria-label="Toggle Menu">
+          <span>☰</span> Menu
+        </button>
+
         <nav id="top-nav" class="top-nav">
           <div class="nav-item-wrapper" data-tooltip="info about me">
             <a href="/" class="nav-pill"><span>🏠</span> Home</a>
           </div>
-          <div class="nav-item-wrapper" data-tooltip="meet the system">
+          <div class="nav-item-wrapper" data-tooltip="system register">
             <a href="/system" class="nav-pill"><span>🧩</span> System</a>
           </div>
           <div class="nav-item-wrapper" data-tooltip="contact me">
@@ -426,6 +446,7 @@ const posts = await getCollection('blog');
           <h1>Blog Posts</h1>
           <p style="color: var(--text-muted); margin: 0.5rem 0 0 0;">Easily publish, edit, or delete posts by managing markdown files inside your <code>src/content/blog/</code> directory.</p>
         </div>
+        <hr />
 
         <div class="content-grid">
           {posts.map(post => (
@@ -443,23 +464,9 @@ const posts = await getCollection('blog');
 
     <script>
       const html = document.documentElement;
-      
       const hamburgerToggle = document.getElementById('hamburger-toggle');
       const topNav = document.getElementById('top-nav');
       
-      hamburgerToggle.addEventListener('click', (e) => {
-        e.stopPropagation();
-        topNav.classList.toggle('mobile-open');
-      });
-
-      document.addEventListener('click', () => {
-        topNav.classList.remove('mobile-open');
-      });
-
-      topNav.addEventListener('click', (e) => {
-        e.stopPropagation();
-      });
-
       const themeToggle = document.getElementById('theme-toggle');
       const themeIcon = document.getElementById('theme-icon');
       
@@ -471,8 +478,16 @@ const posts = await getCollection('blog');
       const savedTheme = localStorage.getItem('theme') || 'dark';
       const savedColor = localStorage.getItem('color') || 'mint';
 
+      html.setAttribute('data-theme', savedTheme);
+      html.setAttribute('data-color', savedColor);
       updateThemeState(savedTheme);
       updateColorLabel(savedColor);
+
+      // Hamburger mobile menu toggle
+      hamburgerToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        topNav.classList.toggle('mobile-open');
+      });
 
       themeToggle.addEventListener('click', () => {
         const currentTheme = html.getAttribute('data-theme');
@@ -491,6 +506,7 @@ const posts = await getCollection('blog');
       document.addEventListener('click', () => {
         dropdown.classList.remove('open');
         dropdownBtn.setAttribute('aria-expanded', 'false');
+        topNav.classList.remove('mobile-open');
       });
 
       dropdownItems.forEach(item => {
