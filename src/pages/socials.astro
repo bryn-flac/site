@@ -4,7 +4,7 @@ const name = "Bryn";
 const socials = [
   { platform: "X", handle: "@bryn_flac", url: "https://x.com/bryn_flac", iconType: "x" },
   { platform: "GitHub", handle: "bryn-flac", url: "https://github.com/bryn-flac", iconType: "github" },
-  { platform: "Discord", handle: "bryn.flac", url: "#", copy: "bryn.flac", iconType: "discord" },
+  { platform: "Discord", handle: "bryn.flac", url: "https://discord.com/users/1294018893202980906", iconType: "discord" },
   { platform: "Email", handle: "alexschuch436@gmail.com", url: "mailto:alexschuch436@gmail.com", iconType: "email" },
   { platform: "TikTok", handle: "@bryn.flac", url: "https://www.tiktok.com/@bryn.flac", iconType: "tiktok" },
   { platform: "YouTube", handle: "@bryn_flac", url: "https://www.youtube.com/@bryn_flac", iconType: "youtube" }
@@ -17,6 +17,14 @@ const socials = [
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{name} — Socials</title>
+    
+    <script is:inline>
+      const initialTheme = localStorage.getItem('theme') || 'dark';
+      const initialColor = localStorage.getItem('color') || 'mint';
+      document.documentElement.setAttribute('data-theme', initialTheme);
+      document.documentElement.setAttribute('data-color', initialColor);
+    </script>
+
     <style>
       :root {
         --bg: #0d1117;
@@ -110,24 +118,33 @@ const socials = [
 
       body {
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        max-width: 950px;
+        max-width: 900px;
         margin: 0 auto;
-        padding: 3rem 2rem 5rem;
+        padding: 2rem 1rem 4rem;
         background-color: var(--bg);
         color: var(--text);
         transition: background-color 0.3s ease, color 0.3s ease;
+        overflow-x: hidden;
       }
 
       .main-wrapper {
         display: flex;
         flex-direction: column;
-        gap: 2rem;
+        gap: 1.5rem;
+      }
+
+      .header-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
       }
 
       .top-nav {
         display: grid;
         grid-template-columns: repeat(8, 1fr);
         gap: 0.4rem;
+        width: 100%;
       }
 
       .nav-item-wrapper {
@@ -141,12 +158,12 @@ const socials = [
         border: none;
         border-radius: 16px;
         padding: 0.85rem 0.4rem;
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         font-weight: 500;
         text-align: center;
         text-decoration: none;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        transition: transform 0.15s ease, background-color 0.2s ease, color 0.2s ease;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -158,7 +175,8 @@ const socials = [
 
       .nav-pill:hover {
         background-color: var(--surface-container-high);
-        transform: translateY(-2px);
+        transform: scale(1.05) translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
       }
 
       .nav-pill.active {
@@ -167,6 +185,7 @@ const socials = [
         font-weight: 600;
       }
 
+      /* Hover Tooltip / Preview */
       .nav-item-wrapper::after {
         content: attr(data-tooltip);
         position: absolute;
@@ -192,6 +211,19 @@ const socials = [
         opacity: 1;
         visibility: visible;
         transform: translateX(-50%) translateY(0);
+      }
+
+      /* Hamburger Button */
+      .hamburger-btn {
+        display: none;
+        background-color: var(--surface);
+        color: var(--text);
+        border: none;
+        border-radius: 16px;
+        padding: 0.85rem 1.25rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
       }
 
       .custom-dropdown {
@@ -237,11 +269,12 @@ const socials = [
         display: flex;
         align-items: center;
         justify-content: space-between;
-        transition: background-color 0.15s ease;
+        transition: background-color 0.15s ease, transform 0.15s ease;
       }
 
       .dropdown-item:hover {
         background-color: var(--surface-container);
+        transform: scale(1.02);
       }
 
       .dropdown-item.selected {
@@ -260,12 +293,6 @@ const socials = [
         gap: 1.5rem;
       }
 
-      .header-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
       h1 {
         font-size: 2rem;
         font-weight: 600;
@@ -279,13 +306,30 @@ const socials = [
         margin: 0;
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+        gap: 1.25rem;
       }
 
-      @media (max-width: 850px) {
+      /* Responsive logic */
+      @media (max-width: 900px) {
+        .hamburger-btn { display: flex; }
         .top-nav {
-          grid-template-columns: repeat(4, 1fr);
+          display: none;
+          grid-template-columns: 1fr;
+          background-color: var(--surface);
+          padding: 0.75rem;
+          border-radius: 20px;
+          position: absolute;
+          top: 5rem;
+          left: 1rem;
+          right: 1rem;
+          width: auto;
+          box-sizing: border-box;
+          z-index: 100;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
+        .top-nav.mobile-open { display: grid; }
+        .header-bar { flex-direction: column; align-items: stretch; }
+        .nav-item-wrapper::after { display: none; }
       }
 
       @media (max-width: 768px) {
@@ -297,113 +341,93 @@ const socials = [
       .social-card {
         background-color: var(--surface-container);
         color: var(--text);
-        border: none;
         border-radius: 20px;
-        padding: 1.25rem 1.5rem;
-        font-size: 0.95rem;
-        font-weight: 500;
+        padding: 1.5rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        cursor: pointer;
         text-decoration: none;
-        transition: transform 0.15s ease, background-color 0.2s ease;
-        width: 100%;
+        transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, box-shadow 0.2s ease;
         box-sizing: border-box;
       }
 
       .social-card:hover {
         background-color: var(--surface-container-high);
-        transform: translateY(-2px);
-      }
-
-      .social-info {
-        display: flex;
-        align-items: center;
-        gap: 1.2rem;
-      }
-
-      .platform-icon {
-        width: 26px;
-        height: 26px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--text-muted);
-      }
-
-      .platform-icon svg {
-        width: 100%;
-        height: 100%;
-        fill: currentColor;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
       }
 
       .platform-name {
         font-weight: 600;
-        font-size: 1.05rem;
-        margin: 0;
+        font-size: 1.15rem;
+        margin: 0 0 0.25rem 0;
       }
 
       .platform-handle {
         color: var(--text-muted);
-        font-size: 0.85rem;
+        font-size: 0.9rem;
         margin: 0;
       }
 
       .action-indicator {
         color: var(--text-muted);
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        font-weight: 500;
       }
     </style>
   </head>
   <body>
     <div class="main-wrapper">
-      <!-- Top Navigation Bar -->
-      <nav class="top-nav">
-        <div class="nav-item-wrapper" data-tooltip="info about me">
-          <a href="/" class="nav-pill"><span>🏠</span> Home</a>
-        </div>
-        <div class="nav-item-wrapper" data-tooltip="system register">
-          <a href="/system" class="nav-pill"><span>🧩</span> System</a>
-        </div>
-        <div class="nav-item-wrapper" data-tooltip="contact me">
-          <a href="/socials" class="nav-pill active"><span>🔗</span> Socials</a>
-        </div>
-        <div class="nav-item-wrapper" data-tooltip="see whats up">
-          <a href="/blog" class="nav-pill"><span>📝</span> Blog</a>
-        </div>
-        <div class="nav-item-wrapper" data-tooltip="what ive done">
-          <a href="/projects" class="nav-pill"><span>⚡</span> Projects</a>
-        </div>
-        <div class="nav-item-wrapper" data-tooltip="take a look">
-          <a href="/surprise" class="nav-pill"><span>🎁</span> Surprise</a>
-        </div>
-        
-        <!-- Theme Toggle Button -->
-        <div class="nav-item-wrapper" data-tooltip="switch light/dark">
-          <button id="theme-toggle" class="nav-pill" type="button" aria-label="Toggle Theme">
-            <span id="theme-icon">🌙</span> Theme
-          </button>
-        </div>
-
-        <!-- Color Palette Dropdown -->
-        <div class="nav-item-wrapper" data-tooltip="change accent">
-          <div class="custom-dropdown" id="color-dropdown">
-            <button id="dropdown-btn" class="nav-pill" type="button" aria-expanded="false">
-              <span id="dropdown-label">🎨 Mint</span>
+      <!-- Top Navigation & Hamburger Header -->
+      <header class="header-bar">
+        <button id="hamburger-toggle" class="hamburger-btn" type="button" aria-label="Toggle Menu">☰ Menu</button>
+        <nav id="top-nav" class="top-nav">
+          <div class="nav-item-wrapper" data-tooltip="info about me">
+            <a href="/" class="nav-pill"><span>🏠</span> Home</a>
+          </div>
+          <div class="nav-item-wrapper" data-tooltip="system register">
+            <a href="/system" class="nav-pill"><span>🧩</span> System</a>
+          </div>
+          <div class="nav-item-wrapper" data-tooltip="contact me">
+            <a href="/socials" class="nav-pill active"><span>🔗</span> Socials</a>
+          </div>
+          <div class="nav-item-wrapper" data-tooltip="see whats up">
+            <a href="/blog" class="nav-pill"><span>📝</span> Blog</a>
+          </div>
+          <div class="nav-item-wrapper" data-tooltip="what ive done">
+            <a href="/projects" class="nav-pill"><span>⚡</span> Projects</a>
+          </div>
+          <div class="nav-item-wrapper" data-tooltip="take a look">
+            <a href="/surprise" class="nav-pill"><span>🎁</span> Surprise</a>
+          </div>
+          
+          <!-- Theme Toggle Button -->
+          <div class="nav-item-wrapper" data-tooltip="switch light/dark">
+            <button id="theme-toggle" class="nav-pill" type="button" aria-label="Toggle Theme">
+              <span id="theme-icon">🌙</span> Theme
             </button>
-            <div class="dropdown-menu">
-              <button class="dropdown-item" data-value="mint" type="button">Mint <span>●</span></button>
-              <button class="dropdown-item" data-value="lavender" type="button">Lavender <span>●</span></button>
-              <button class="dropdown-item" data-value="sunny" type="button">Sunny <span>●</span></button>
+          </div>
+
+          <!-- Color Palette Dropdown -->
+          <div class="nav-item-wrapper" data-tooltip="change accent">
+            <div class="custom-dropdown" id="color-dropdown">
+              <button id="dropdown-btn" class="nav-pill" type="button" aria-expanded="false">
+                <span id="dropdown-label">🎨 Mint</span>
+              </button>
+              <div class="dropdown-menu">
+                <button class="dropdown-item" data-value="mint" type="button">Mint <span>●</span></button>
+                <button class="dropdown-item" data-value="lavender" type="button">Lavender <span>●</span></button>
+                <button class="dropdown-item" data-value="sunny" type="button">Sunny <span>●</span></button>
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </header>
 
       <div class="qs-panel">
-        <div class="header-row">
+        <div>
           <h1>Connect With Me</h1>
+          <p style="color: var(--text-muted); margin: 0.5rem 0 0 0;">Find me around the web and across different platforms.</p>
         </div>
 
         <ul class="social-list">
@@ -412,35 +436,13 @@ const socials = [
               <a 
                 href={s.url} 
                 target={s.copy ? "_self" : "_blank"} 
-                rel="noopener noreferrer" 
+                rel={s.copy ? "" : "noopener noreferrer"}
                 class="social-card"
-                data-copy={s.copy || ""}
+                onclick={s.copy ? `navigator.clipboard.writeText('${s.copy}'); alert('Copied to clipboard!'); return false;` : ""}
               >
                 <div class="social-info">
-                  <span class="platform-icon">
-                    {s.iconType === 'x' && (
-                      <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                    )}
-                    {s.iconType === 'github' && (
-                      <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                    )}
-                    {s.iconType === 'discord' && (
-                      <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 00-4.885-1.515.074.074 0 00-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 00-5.487 0 12.64 12.64 0 00-.617-1.25.077.077 0 00-.079-.037A19.736 19.736 0 003.677 4.37a.07.07 0 00-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 00.031.057 19.9 19.9 0 005.993 3.03.078.078 0 00.084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 01-1.872-.892.077.077 0 01-.008-.128 10.2 10.2 0 00.372-.292.074.074 0 01.077-.01c3.927 1.793 8.18 1.793 12.061 0a.074.074 0 01.078.01c.12.098.246.198.373.292a.077.077 0 01-.006.127 12.299 12.299 0 01-1.873.892.077.077 0 00-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 00.084.028 19.839 19.839 0 006.002-3.03.077.077 0 00.032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 00-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-                    )}
-                    {s.iconType === 'email' && (
-                      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-                    )}
-                    {s.iconType === 'tiktok' && (
-                      <svg viewBox="0 0 24 24"><path d="M19.589 6.686a4.793 4.793 0 01-3.77-4.242V2h-3.445v13.672a2.896 2.896 0 01-5.201 1.743l-.002-.001.002.001a2.895 2.895 0 013.183-4.51v-3.5a6.329 6.329 0 00-5.394 10.692 6.33 6.33 0 0010.857-4.424V8.981a8.17 8.17 0 004.774 1.53V7.072a4.83 4.83 0 01-1.018-.386z"/></svg>
-                    )}
-                    {s.iconType === 'youtube' && (
-                      <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                    )}
-                  </span>
-                  <div>
-                    <p class="platform-name">{s.platform}</p>
-                    <p class="platform-handle">{s.handle}</p>
-                  </div>
+                  <p class="platform-name">{s.platform}</p>
+                  <p class="platform-handle">{s.handle}</p>
                 </div>
                 <span class="action-indicator">{s.copy ? "📋 Copy" : "↗"}</span>
               </a>
@@ -452,6 +454,24 @@ const socials = [
 
     <script>
       const html = document.documentElement;
+      
+      // Hamburger menu toggle logic
+      const hamburgerToggle = document.getElementById('hamburger-toggle');
+      const topNav = document.getElementById('top-nav');
+      
+      hamburgerToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        topNav.classList.toggle('mobile-open');
+      });
+
+      document.addEventListener('click', () => {
+        topNav.classList.remove('mobile-open');
+      });
+
+      topNav.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+
       const themeToggle = document.getElementById('theme-toggle');
       const themeIcon = document.getElementById('theme-icon');
       
@@ -463,8 +483,6 @@ const socials = [
       const savedTheme = localStorage.getItem('theme') || 'dark';
       const savedColor = localStorage.getItem('color') || 'mint';
 
-      html.setAttribute('data-theme', savedTheme);
-      html.setAttribute('data-color', savedColor);
       updateThemeState(savedTheme);
       updateColorLabel(savedColor);
 
@@ -519,25 +537,6 @@ const socials = [
           }
         });
       }
-
-      // Discord copy functionality
-      const socialCards = document.querySelectorAll('.social-card');
-      socialCards.forEach(card => {
-        const copyText = card.getAttribute('data-copy');
-        if (copyText) {
-          card.addEventListener('click', (e) => {
-            e.preventDefault();
-            navigator.clipboard.writeText(copyText);
-            const indicator = card.querySelector('.action-indicator');
-            if (indicator) {
-              indicator.textContent = '✅ Copied!';
-              setTimeout(() => {
-                indicator.textContent = '📋 Copy';
-              }, 2000);
-            }
-          });
-        }
-      });
     </script>
   </body>
 </html>

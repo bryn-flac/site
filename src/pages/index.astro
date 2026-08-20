@@ -113,22 +113,32 @@ const name = "Bryn";
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         max-width: 900px;
         margin: 0 auto;
-        padding: 3rem 2rem 5rem;
+        padding: 2rem 1rem 4rem;
         background-color: var(--bg);
         color: var(--text);
         transition: background-color 0.3s ease, color 0.3s ease;
+        overflow-x: hidden;
       }
 
       .main-wrapper {
         display: flex;
         flex-direction: column;
-        gap: 2rem;
+        gap: 1.5rem;
+      }
+
+      /* --- HEADER & NAVIGATION --- */
+      .header-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
       }
 
       .top-nav {
         display: grid;
         grid-template-columns: repeat(8, 1fr);
         gap: 0.4rem;
+        width: 100%;
       }
 
       .nav-item-wrapper {
@@ -152,9 +162,9 @@ const name = "Bryn";
         align-items: center;
         justify-content: center;
         gap: 0.25rem;
-        cursor: pointer;
         width: 100%;
         box-sizing: border-box;
+        cursor: pointer;
       }
 
       .nav-pill:hover {
@@ -169,32 +179,50 @@ const name = "Bryn";
         font-weight: 600;
       }
 
-      /* Hover Tooltip / Preview */
-      .nav-item-wrapper::after {
-        content: attr(data-tooltip);
-        position: absolute;
-        bottom: calc(100% + 10px);
-        left: 50%;
-        transform: translateX(-50%) translateY(4px);
-        background-color: var(--surface-container-high);
+      /* Hamburger Toggle Button (Hidden on Desktop) */
+      .hamburger-btn {
+        display: none;
+        background-color: var(--surface);
         color: var(--text);
-        padding: 0.35rem 0.75rem;
-        border-radius: 8px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        white-space: nowrap;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        pointer-events: none;
-        z-index: 20;
+        border: none;
+        border-radius: 16px;
+        padding: 0.85rem 1.25rem;
+        font-size: 1rem;
+        font-weight: 600;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        align-items: center;
+        gap: 0.5rem;
       }
 
-      .nav-item-wrapper:hover::after {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(0);
+      /* Hover Tooltips - Restricted to devices with true hover support */
+      @media (hover: hover) {
+        .nav-item-wrapper::after {
+          content: attr(data-tooltip);
+          position: absolute;
+          bottom: calc(100% + 10px);
+          left: 50%;
+          transform: translateX(-50%) translateY(4px);
+          background-color: var(--surface-container-high);
+          color: var(--text);
+          padding: 0.35rem 0.75rem;
+          border-radius: 8px;
+          font-size: 0.75rem;
+          font-weight: 500;
+          white-space: nowrap;
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
+          opacity: 0;
+          visibility: hidden;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+          pointer-events: none;
+          z-index: 20;
+        }
+
+        .nav-item-wrapper:hover::after {
+          opacity: 1;
+          visibility: visible;
+          transform: translateX(-50%) translateY(0);
+        }
       }
 
       .custom-dropdown {
@@ -254,18 +282,19 @@ const name = "Bryn";
         font-weight: 600;
       }
 
+      /* --- CONTENT PANELS --- */
       .qs-panel {
         background-color: var(--surface);
-        border-radius: 32px;
-        padding: 2.5rem;
+        border-radius: 28px;
+        padding: 1.75rem;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 1.25rem;
       }
 
       h1 {
-        font-size: 2rem;
+        font-size: 1.75rem;
         font-weight: 600;
         margin: 0;
         letter-spacing: -0.02em;
@@ -312,16 +341,50 @@ const name = "Bryn";
         font-size: 0.9rem;
       }
 
+      .blank-space {
+        margin-top: 1rem;
+        padding: 1.5rem;
+        border: 2px dashed var(--outline);
+        border-radius: 20px;
+        text-align: center;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+
+      /* --- RESPONSIVE MEDIA QUERIES --- */
       @media (max-width: 900px) {
+        .hamburger-btn {
+          display: flex;
+        }
+
         .top-nav {
-          grid-template-columns: repeat(4, 1fr);
+          display: none;
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+          background-color: var(--surface);
+          padding: 1rem;
+          border-radius: 20px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+          box-sizing: border-box;
+        }
+
+        .top-nav.mobile-open {
+          display: grid;
+        }
+
+        .header-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .custom-dropdown .dropdown-menu {
+          left: auto;
+          right: 0;
         }
       }
 
       @media (max-width: 600px) {
-        .top-nav {
-          grid-template-columns: repeat(2, 1fr);
-        }
         .content-grid {
           grid-template-columns: 1fr;
         }
@@ -330,48 +393,54 @@ const name = "Bryn";
   </head>
   <body>
     <div class="main-wrapper">
-      <!-- Top Navigation Bar with Even Spacing & Hover Previews -->
-      <nav class="top-nav">
-        <div class="nav-item-wrapper" data-tooltip="info about me">
-          <a href="/" class="nav-pill active"><span>🏠</span> Home</a>
-        </div>
-        <div class="nav-item-wrapper" data-tooltip="meet the system">
-          <a href="/system" class="nav-pill"><span>🧩</span> System</a>
-        </div>
-        <div class="nav-item-wrapper" data-tooltip="contact me">
-          <a href="/socials" class="nav-pill"><span>🔗</span> Socials</a>
-        </div>
-        <div class="nav-item-wrapper" data-tooltip="see whats up">
-          <a href="/blog" class="nav-pill"><span>📝</span> Blog</a>
-        </div>
-        <div class="nav-item-wrapper" data-tooltip="what ive done">
-          <a href="/projects" class="nav-pill"><span>⚡</span> Projects</a>
-        </div>
-        <div class="nav-item-wrapper" data-tooltip="take a look">
-          <a href="/surprise" class="nav-pill"><span>🎁</span> Surprise</a>
-        </div>
-        
-        <!-- Theme Toggle Button -->
-        <div class="nav-item-wrapper" data-tooltip="switch light/dark">
-          <button id="theme-toggle" class="nav-pill" type="button" aria-label="Toggle Theme">
-            <span id="theme-icon">🌙</span> Theme
-          </button>
-        </div>
+      <!-- Navigation Header with Hamburger Menu for Mobile -->
+      <header class="header-bar">
+        <button id="hamburger-toggle" class="hamburger-btn" type="button" aria-label="Toggle Menu">
+          <span>☰</span> Menu
+        </button>
 
-        <!-- Color Palette Dropdown -->
-        <div class="nav-item-wrapper" data-tooltip="change accent">
-          <div class="custom-dropdown" id="color-dropdown">
-            <button id="dropdown-btn" class="nav-pill" type="button" aria-expanded="false">
-              <span id="dropdown-label">🎨 Lavender</span>
+        <nav id="top-nav" class="top-nav">
+          <div class="nav-item-wrapper" data-tooltip="info about me">
+            <a href="/" class="nav-pill active"><span>🏠</span> Home</a>
+          </div>
+          <div class="nav-item-wrapper" data-tooltip="meet the system">
+            <a href="/system" class="nav-pill"><span>🧩</span> System</a>
+          </div>
+          <div class="nav-item-wrapper" data-tooltip="contact me">
+            <a href="/socials" class="nav-pill"><span>🔗</span> Socials</a>
+          </div>
+          <div class="nav-item-wrapper" data-tooltip="see whats up">
+            <a href="/blog" class="nav-pill"><span>📝</span> Blog</a>
+          </div>
+          <div class="nav-item-wrapper" data-tooltip="what ive done">
+            <a href="/projects" class="nav-pill"><span>⚡</span> Projects</a>
+          </div>
+          <div class="nav-item-wrapper" data-tooltip="take a look">
+            <a href="/surprise" class="nav-pill"><span>🎁</span> Surprise</a>
+          </div>
+          
+          <!-- Theme Toggle Button -->
+          <div class="nav-item-wrapper" data-tooltip="switch light/dark">
+            <button id="theme-toggle" class="nav-pill" type="button" aria-label="Toggle Theme">
+              <span id="theme-icon">🌙</span> Theme
             </button>
-            <div class="dropdown-menu">
-              <button class="dropdown-item" data-value="mint" type="button">Mint <span>●</span></button>
-              <button class="dropdown-item" data-value="lavender" type="button">Lavender <span>●</span></button>
-              <button class="dropdown-item" data-value="sunny" type="button">Sunny <span>●</span></button>
+          </div>
+
+          <!-- Color Palette Dropdown -->
+          <div class="nav-item-wrapper" data-tooltip="change accent">
+            <div class="custom-dropdown" id="color-dropdown">
+              <button id="dropdown-btn" class="nav-pill" type="button" aria-expanded="false">
+                <span id="dropdown-label">🎨 Lavender</span>
+              </button>
+              <div class="dropdown-menu">
+                <button class="dropdown-item" data-value="mint" type="button">Mint <span>●</span></button>
+                <button class="dropdown-item" data-value="lavender" type="button">Lavender <span>●</span></button>
+                <button class="dropdown-item" data-value="sunny" type="button">Sunny <span>●</span></button>
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </nav>
+      </header>
 
       <div class="qs-panel">
         <h1>Hello, I'm {name}</h1>
@@ -403,11 +472,19 @@ const name = "Bryn";
             <p>Fascinated by automotive mechanics, vehicle specs, and utilizing simulation racing to hone real-world driving reactions.</p>
           </div>
         </div>
+
+        <div class="blank-space">
+          Credits go to: <a href="https://devmatei.com">DevMatei</a> for the Themes as Inspo <br>
+          Gemini for helping me find a good site provider and write parts of code
+        </div>
       </div>
     </div>
 
     <script>
       const html = document.documentElement;
+      const hamburgerToggle = document.getElementById('hamburger-toggle');
+      const topNav = document.getElementById('top-nav');
+      
       const themeToggle = document.getElementById('theme-toggle');
       const themeIcon = document.getElementById('theme-icon');
       
@@ -421,6 +498,12 @@ const name = "Bryn";
 
       updateThemeState(currentTheme);
       updateColorLabel(currentColor);
+
+      // Hamburger mobile menu toggle
+      hamburgerToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        topNav.classList.toggle('mobile-open');
+      });
 
       themeToggle.addEventListener('click', () => {
         const activeTheme = html.getAttribute('data-theme');
@@ -439,6 +522,7 @@ const name = "Bryn";
       document.addEventListener('click', () => {
         dropdown.classList.remove('open');
         dropdownBtn.setAttribute('aria-expanded', 'false');
+        topNav.classList.remove('mobile-open');
       });
 
       dropdownItems.forEach(item => {

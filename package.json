@@ -12,6 +12,9 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^7.2.3"
+    "astro": "^7.2.4"
+  },
+  "allowScripts": {
+    "astro@7.2.4": true
   }
 }
